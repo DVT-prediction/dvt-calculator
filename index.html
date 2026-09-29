@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>髋关节置换术后深静脉血栓风险预测计算器</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+    background: #f0f4f8; color: #2d3748; padding: 14px;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  header {
+    background: linear-gradient(135deg, #1a5276, #2874a6);
+    color: #fff; border-radius: 12px; padding: 14px 24px; margin-bottom: 12px;
+    box-shadow: 0 4px 14px rgba(26,82,118,.25); text-align: center;
+  }
+  header h1 { font-size: 1.3rem; font-weight: 700; }
+  .card {
+    background: #fff; border-radius: 12px; padding: 14px 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-bottom: 12px;
+  }
+  .card h2 {
+    font-size: .9rem; color: #1a5276; margin-bottom: 10px;
+    padding-bottom: 5px; border-bottom: 2px solid #e8f0f7; font-weight: 700;
+  }
+  .card h3 {
+    font-size: .8rem; color: #2874a6; margin: 10px 0 6px; font-weight: 700;
+  }
+  .card h3:first-of-type { margin-top: 0; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px 14px; }
+  .row .field { flex: 1; min-width: 130px; }
+  .field label { display: block; font-size: .76rem; color: #4a5568; margin-bottom: 3px; font-weight: 600; white-space: nowrap; }
+  .field input, .field select {
+    width: 100%; padding: 6px 8px; border: 1.5px solid #cbd5e0; border-radius: 7px;
+    font-size: .86rem; color: #2d3748; background: #fff; outline: none;
+    transition: border-color .15s;
+  }
+  .field input:focus, .field select:focus { border-color: #2874a6; }
+  .btn {
+    display: block; width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer;
+    background: linear-gradient(135deg, #1a5276, #2874a6); color: #fff;
+    font-size: 1.05rem; font-weight: 700; letter-spacing: 3px;
+    box-shadow: 0 4px 12px rgba(26,82,118,.3); transition: transform .1s;
+    margin-bottom: 12px;
+  }
+  .btn:active { transform: scale(.99); }
+  #result { display: none; }
+  .risk-number { display: flex; align-items: center; justify-content: center; gap: 22px; flex-wrap: wrap; }
+  .risk-number .lbl { font-size: .85rem; color: #718096; }
+  .risk-number .pct { font-size: 2.6rem; font-weight: 800; }
+  .risk-tag {
+    display: inline-block; padding: 4px 22px; border-radius: 999px;
+    font-size: .95rem; font-weight: 700; color: #fff;
+  }
+  .bar-wrap { background: #e2e8f0; border-radius: 999px; height: 14px; overflow: hidden; margin: 12px 0 4px; }
+  .bar { height: 100%; width: 0; border-radius: 999px; transition: width .8s ease; }
+  .bar-labels { display: flex; justify-content: space-between; font-size: .66rem; color: #718096; }
+  .low  { color: #229954; } .high { color: #cb4335; }
+  .bg-low { background: #229954; } .bg-high { background: #cb4335; }
+  footer { text-align: center; font-size: .68rem; color: #a0aec0; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>髋关节置换术后深静脉血栓风险预测计算器</h1>
+  </header>
+
+  <div class="card">
+    <h2>① 患者一般资料</h2>
+    <div class="row">
+      <div class="field"><label>年龄（岁）</label><input type="number" id="年龄" step="1" min="18" max="110" placeholder="如 65"></div>
+      <div class="field"><label>性别</label>
+        <select id="性别"><option value="">请选择</option><option>男</option><option>女</option></select></div>
+      <div class="field"><label>血型</label>
+        <select id="血型"><option value="">请选择</option><option>O型血</option><option>非O型血</option></select></div>
+      <div class="field"><label>婚姻状况</label>
+        <select id="丧偶"><option value="">请选择</option><option value="否">已婚、未婚、离异</option><option value="是">丧偶</option></select></div>
+      <div class="field"><label>入院类型</label>
+        <select id="入院类型"><option value="">请选择</option><option>急诊</option><option>门诊</option></select></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>② 患者术前指标</h2>
+    <h3>疾病相关因素</h3>
+    <div class="row">
+      <div class="field"><label>高血压</label>
+        <select id="高血压"><option value="">请选择</option><option>否</option><option>是</option></select></div>
+      <div class="field"><label>血栓病史</label>
+        <select id="血栓病史"><option value="">请选择</option><option>否</option><option>是</option></select></div>
+      <div class="field"><label>水电解质紊乱</label>
+        <select id="水电解质紊乱"><option value="">请选择</option><option>无</option><option>有</option></select></div>
+    </div>
+    <h3>实验室检查指标</h3>
+    <div class="row">
+      <div class="field"><label>D-二聚体（mg/L）</label><input type="number" id="D...二聚体" step="0.01" min="0" placeholder="如 0.50"></div>
+      <div class="field"><label>白细胞计数（×10⁹/L）</label><input type="number" id="白细胞计数" step="0.01" min="0" placeholder="如 6.50"></div>
+      <div class="field"><label>葡萄糖（mmol/L）</label><input type="number" id="葡萄糖" step="0.01" min="0" placeholder="如 5.60"></div>
+      <div class="field"><label>C反应蛋白（mg/L）</label><input type="number" id="C反应蛋白" step="0.01" min="0" placeholder="如 8.00"></div>
+      <div class="field"><label>白蛋白（g/L）</label><input type="number" id="白蛋白" step="0.01" min="0" placeholder="如 40.0"></div>
+    </div>
+    <h3>功能状态评估</h3>
+    <div class="row">
+      <div class="field"><label>日常生活活动能力评定（分）</label><input type="number" id="日常生活活动能力评定" step="1" min="0" max="100" placeholder="0–100"></div>
+      <div class="field"><label>术前计划转入 ICU</label>
+        <select id="术前计划转入ICU"><option value="">请选择</option><option>无</option><option>有</option></select></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>③ 患者术中指标</h2>
+    <div class="row">
+      <div class="field"><label>手术部位</label>
+        <select id="手术部位"><option value="">请选择</option><option>右侧髋关节置换</option><option>左侧髋关节置换</option></select></div>
+      <div class="field"><label>手术方式</label>
+        <select id="手术方式"><option value="">请选择</option><option>半髋关节置换</option><option>全髋关节置换</option></select></div>
+    </div>
+  </div>
+
+  <button class="btn" onclick="calc()">计 算 风 险</button>
+
+  <div class="card" id="result">
+    <h2>预测结果</h2>
+    <div class="risk-number">
+      <span class="lbl">术后深静脉血栓发生风险：</span>
+      <span class="pct" id="pct">--%</span>
+      <span class="risk-tag" id="tag">--</span>
+    </div>
+    <div class="bar-wrap"><div class="bar" id="bar"></div></div>
+    <div class="bar-labels"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+  </div>
+
+  <footer>基于 Logistic Regression 模型构建（内部验证集 AUC：0.786；外部验证集 AUC：0.851）</footer>
+</div>
+
+<script>
+/* 模型系数（由 R 脚本自动写入，全精度） */
+var COEF = {
+  "Intercept": -7.3108653241,
+  "性别=女": 0.7389540555,
+  "血型=非O型血": 0.3230398857,
+  "入院类型=门诊": -0.6140723950,
+  "年龄": 0.0320488089,
+  "高血压=是": 0.2586373411,
+  "血栓病史=是": 1.8222981306,
+  "日常生活活动能力评定": 0.0234310970,
+  "D...二聚体": 0.0278110745,
+  "白细胞计数": 0.1070818434,
+  "葡萄糖": 0.0464930591,
+  "C反应蛋白": 0.0075531642,
+  "白蛋白": -0.0227489119,
+  "手术部位=左侧髋关节置换": -0.5631100637,
+  "手术方式=全髋关节置换": 0.8116314465,
+  "术前计划转入ICU=有": 1.2980583579,
+  "水电解质紊乱=有": 0.4928812341,
+  "丧偶=是": 1.3702115787
+};
+
+var CONT_VARS = ["年龄", "日常生活活动能力评定", "D...二聚体", "白细胞计数",
+                 "葡萄糖", "C反应蛋白", "白蛋白"];
+var CAT_VARS  = ["性别", "血型", "入院类型", "高血压", "血栓病史",
+                 "手术部位", "手术方式", "术前计划转入ICU", "水电解质紊乱", "丧偶"];
+
+function calc() {
+  var lp = COEF["Intercept"] || 0;
+  var ids = CONT_VARS.concat(CAT_VARS);
+
+  for (var i = 0; i < ids.length; i++) {
+    var el = document.getElementById(ids[i]);
+    if (el.value === "" || el.value === null) {
+      alert("请填写完整：" + el.previousElementSibling.textContent);
+      el.focus(); return;
+    }
+  }
+
+  for (var j = 0; j < CONT_VARS.length; j++) {
+    var name = CONT_VARS[j];
+    lp += (COEF[name] || 0) * parseFloat(document.getElementById(name).value);
+  }
+  for (var k = 0; k < CAT_VARS.length; k++) {
+    var cname = CAT_VARS[k];
+    lp += COEF[cname + "=" + document.getElementById(cname).value] || 0;
+  }
+
+  var p = 1 / (1 + Math.exp(-lp));
+  showResult(p);
+}
+
+function showResult(p) {
+  var pct = p * 100;
+  document.getElementById("pct").textContent = pct.toFixed(1) + "%";
+  var tag = document.getElementById("tag");
+  var bar = document.getElementById("bar");
+
+  // 风险分层：最佳阈值 0.125（约登指数），<0.125 低危，≥0.125 高危
+  var cls, txt;
+  if (p < 0.125) { cls = "low"; txt = "低危"; }
+  else           { cls = "high"; txt = "高危"; }
+
+  document.getElementById("pct").className = "pct " + cls;
+  tag.textContent = txt;
+  tag.className = "risk-tag bg-" + cls;
+
+  bar.className = "bar bg-" + cls;
+  document.getElementById("result").style.display = "block";
+  setTimeout(function(){ bar.style.width = Math.min(pct, 100) + "%"; }, 50);
+  document.getElementById("result").scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+</script>
+</body>
+</html>
+
+
