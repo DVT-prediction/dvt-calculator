@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>髋关节置换术后深静脉血栓风险预测计算器</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+    background: #f0f4f8; color: #2d3748; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .container { max-width: 860px; width: 100%; }
+  header { text-align: center; margin-bottom: 28px; }
+  header h1 { font-size: 1.4rem; color: #1a5276; font-weight: 700; line-height: 1.5; }
+  header p { font-size: .85rem; color: #718096; margin-top: 8px; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .card {
+    background: #fff; border-radius: 14px; padding: 28px 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.07); text-decoration: none; color: inherit;
+    display: block; transition: transform .15s, box-shadow .15s;
+    border-top: 4px solid #2874a6;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(26,82,118,.18); }
+  .card .icon {
+    width: 46px; height: 46px; border-radius: 12px; margin-bottom: 14px;
+    background: linear-gradient(135deg, #1a5276, #2874a6);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.3rem; font-weight: 700;
+  }
+  .card h2 { font-size: 1.05rem; color: #1a5276; margin-bottom: 8px; font-weight: 700; }
+  .card p { font-size: .8rem; color: #718096; line-height: 1.7; }
+  .card .go { margin-top: 14px; font-size: .82rem; color: #2874a6; font-weight: 700; }
+  @media (max-width: 640px) { .cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>髋关节置换术后深静脉血栓风险预测计算器</h1>
+    <p>基于 Logistic Regression 模型构建 · 请根据患者情况选择适用版本</p>
+  </header>
+
+  <div class="cards">
+    <a class="card" href="general.html">
+      <div class="icon">全</div>
+      <h2>全人群模型</h2>
+      <p>适用于所有拟行髋关节置换术的患者。基于 17 项预测变量进行评估。</p>
+      <div class="go">进入计算器 →</div>
+    </a>
+
+    <a class="card" href="diabetes.html">
+      <div class="icon">糖</div>
+      <h2>糖尿病亚组模型</h2>
+      <p>适用于合并糖尿病、拟行髋关节置换术的患者。基于 5 项预测变量进行快速评估。</p>
+      <div class="go">进入计算器 →</div>
+    </a>
+  </div>
+</div>
+</body>
+</html>
+
+
